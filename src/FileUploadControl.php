@@ -26,13 +26,13 @@ class FileUploadControl extends \Nette\Forms\Controls\UploadControl {
 	public static function register(\Nette\DI\Container $systemContainer, $configuration = []) {
 		$class = __CLASS__;
 		\Nette\Forms\Container::extensionMethod("addFileUpload", function(
-			\Nette\Forms\Container $container, $name, $maxFiles = null, $maxFileSize = null
+			\Nette\Forms\Container $container, $name, $label, $maxFiles = null, $maxFileSize = null
 		) use ($class, $systemContainer, $configuration) {
 			$maxFiles = is_null($maxFiles) ? $configuration["maxFiles"] : $maxFiles;
 			$maxFileSize = is_null($maxFileSize) ? $configuration["maxFileSize"] : $maxFileSize;
 			
 			/** @var FileUploadControl $component */
-			$component = new $class($name, $maxFiles, $maxFileSize);
+			$component = new $class($label, $maxFiles, $maxFileSize);
 			$component->setContainer($systemContainer);
 			$component->setUploadModel($configuration["uploadModel"]);
 			$component->setFileFilter($configuration["fileFilter"]);
@@ -208,16 +208,16 @@ class FileUploadControl extends \Nette\Forms\Controls\UploadControl {
 	 * @var array
 	 */
 	private $uploadSettings = [];
-	
+
 	/**
 	 * FileUploadControl constructor.
 	 *
-	 * @param string $name        Název inputu.
-	 * @param int    $maxFiles    Maximální počet souborů.
+	 * @param $label
+	 * @param int $maxFiles Maximální počet souborů.
 	 * @param string $maxFileSize Maximální velikosti souboru.
 	 */
-	public function __construct($name, $maxFiles, $maxFileSize = null) {
-		parent::__construct($name);
+	public function __construct($label, $maxFiles, $maxFileSize = null) {
+		parent::__construct($label);
 		$this->maxFiles = $maxFiles;
 		if(is_null($maxFileSize)) {
 			$this->fileSizeString = ini_get("upload_max_filesize") . "B";
